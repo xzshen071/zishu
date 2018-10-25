@@ -89,6 +89,6 @@ int main(){
 		printf("no");
 	*/	
 	
-	return 0;
 	
+	return 0;
 }
