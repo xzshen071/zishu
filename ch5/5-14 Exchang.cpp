@@ -5,7 +5,7 @@
 #include<sstream>
 using namespace std;
 
-map<int, pair<int, int> > notes;										//编号映射买家信息
+map<int, pair<int, int> > notes;						//编号映射买家信息
 
 //要价高 
 struct cmp1{												
@@ -23,14 +23,14 @@ struct cmp2{
 	}
 }; 
 
-//map<pair<int, int>, int> notes;										//买卖信息映射编号，可能买卖信息会一样啊（咋办）  
-map<int, string> i_comd;												//编号映射买家或卖家 
+//map<pair<int, int>, int> notes;						//买卖信息映射编号，可能买卖信息会一样啊（咋办）  
+map<int, string> i_comd;								//编号映射买家或卖家 
 
-priority_queue<int, vector<int >, cmp1> buy;							//买家优先队列，要价越高越好，存编号 
-priority_queue<int, vector<int >, cmp2> sell;							//卖家优先队列，出价越低越好，存编号 
-vector<int> f;															//记录要删除的订单 
+priority_queue<int, vector<int >, cmp1> buy;			//买家优先队列，要价越高越好，存编号 
+priority_queue<int, vector<int >, cmp2> sell;			//卖家优先队列，出价越低越好，存编号 
+vector<int> f;											//记录要删除的订单 
 
-map<string, map<int, int> > b_s_size;									//主要是为了映射买卖队列队首要的数量
+map<string, map<int, int> > b_s_size;					//主要是为了映射买卖队列队首要的数量
 
 void print_quote(string s); 
 pair<int, int> take_front(string s);
@@ -154,7 +154,7 @@ void print_quote(string s) {
 	else tmp_s = take_front("SELL");
 	//cout << tmp_b.second << " " << tmp_s.second << endl;
 	//判断是否发生交易
-	if(tmp_b.first && tmp_s.first && tmp_b.second >= tmp_s.second) {										//发生交易 
+	if(tmp_b.first && tmp_s.first && tmp_b.second >= tmp_s.second) {														//发生交易 
 		//打印"TRADE"
 		//int tmp_money, tmp_size = tmp_b.first < tmp_s.first ? tmp_b.first : tmp_s.first;
 		int tmp_money, tmp_size;
@@ -165,42 +165,42 @@ void print_quote(string s) {
 		//更新优先队列
 		int p_b = buy.top();
 		int p_s = sell.top();
-		if(notes[p_b].first >= notes[p_s].first) {															//买的数量大于卖的数量 
+		if(notes[p_b].first >= notes[p_s].first) {											//买的数量大于卖的数量 
 			//cout << "1" << endl;
 			int left_s = notes[p_s].first;
 			tmp_size = notes[p_s].first;
 
-			b_s_size["SELL"][tmp_s.second] -= notes[p_s].first;												//x -= y为 x = x -y，减少卖队列相应的数目
-			f.push_back(sell.top());																		//卖出队列把跟卖出的钱相等的信息全部出队，且记录完成编号
+			b_s_size["SELL"][tmp_s.second] -= notes[p_s].first;								//x -= y为 x = x -y，减少卖队列相应的数目
+			f.push_back(sell.top());														//卖出队列把跟卖出的钱相等的信息全部出队，且记录完成编号
 			sell.pop();					 	
 
-			b_s_size["BUY"][tmp_b.second] -= notes[p_s].first;												//减少买队列相应的数目 
-			left_s = notes[buy.top()].first - left_s; 														//说明还没有出列完，对队头进行处理 
+			b_s_size["BUY"][tmp_b.second] -= notes[p_s].first;								//减少买队列相应的数目 
+			left_s = notes[buy.top()].first - left_s; 										//说明还没有出列完，对队头进行处理 
 			if(left_s != 0) {
 				pair<int, int> left = make_pair(left_s, notes[buy.top()].second);
 				int pos = buy.top();
-				notes[pos] = left;																			//改变编号映射的内容  
+				notes[pos] = left;															//改变编号映射的内容  
 				buy.pop();
 				buy.push(pos);
 			}else {
 				f.push_back(buy.top());	
 				buy.pop();
 			}
-		}else {																								//卖的数量大于买的数量 
+		}else {																				//卖的数量大于买的数量 
 			int left_s = notes[p_b].first;
 			tmp_size = notes[p_b].first;
 			
-			b_s_size["BUY"][tmp_b.second] -= notes[p_b].first;												//减少买队列相应的数目 
-			f.push_back(buy.top()); 																		//买出队列把跟卖出的钱相等的信息全部出队
-			buy.pop();			
+			b_s_size["BUY"][tmp_b.second] -= notes[p_b].first;								//减少买队列相应的数目 
+			f.push_back(buy.top()); 														//买出队列把跟卖出的钱相等的信息全部出队
+			buy.pop();		
 
-			b_s_size["SELL"][tmp_s.second] -= notes[p_b].first;												//x -= y为 x = x -y，减少卖队列相应的数目
+			b_s_size["SELL"][tmp_s.second] -= notes[p_b].first;								//x -= y为 x = x -y，减少卖队列相应的数目
 			left_s = notes[sell.top()].first - left_s; 
-			if(left_s != 0) {																				//说明还没有出列完，对队头进行处理 
-				//cout << left_s << endl; 
+			if(left_s != 0) {																//说明还没有出列完，对队头进行处理 
+				//cout << left_s << endll; 
 				pair<int, int> left = make_pair(left_s, notes[sell.top()].second);
 				int pos = sell.top();
-				notes[pos] = left;																			//改变编号映射的内容  
+				notes[pos] = left;															//改变编号映射的内容  
 				sell.pop();
 				sell.push(pos);
 			}else {
