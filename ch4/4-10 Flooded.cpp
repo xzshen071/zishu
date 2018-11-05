@@ -3,6 +3,8 @@
 int ge[maxn];
 void Sort_Int(int a[],int n); 
 int main(){
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout); 
 	int n,m,kase=0;
 	//输入网格规模 
 	while(scanf("%d%d",&n,&m)==2 && n!=0){
@@ -35,7 +37,7 @@ int main(){
 		} 
 		printf("Region %d\n",++kase);
 		printf("Water level is %.2f meters.\n",h);
-		printf("%.2f percent 0f region is under water.\n\n",(double)num/(n*m)*100);
+		printf("%.2f percent of the region is under water.\n\n",(double)num/(n*m)*100);
 		
 	}
 	
