@@ -1,55 +1,68 @@
-#include<stdio.h>
-#include<math.h>
-#include<string.h>
-int main(){
-	//分子量
-	freopen("input.txt","r",stdin);
-	freopen("output.txt","w",stdout);
-	int t,flag=1;
-	scanf("%d",&t); 
-	while(t--){
-		double mol,sum=0.0;
-		char c;
-		int ge=1;
-		//getchar可以接收到空格、回车、Tab等符号(第一行有多余的空格) 
-		if(flag){
-			c=getchar();
-			flag=0;
-		}	
-		//虽然说第一行多余空格会导致循环里的程序不会运行，但是这会浪费一次t的次数（输出为0），导致后面的输入没有输出结果	
-		while((c=getchar())!='\n'){//标准的键盘输出时，输出结束时回车+ctrl z,所以getchar会接收回车符再执行一次，放在文件里输出不会是这种情况（不空行） 
-		//文件输入的时候最好也是已回车符结尾，注意格式	
-			switch(c){//当选择没有规律少俩的时候可以用switch语句 
-				case 'C'://case里面可以执行多条语句，各类函数都可以用，例如if等，可以把它当作标号用，不过要注意逻辑 
-					mol=12.01;
-					//sum=sum+(ge*mol);
-					break;
-				case 'H':
-					mol=1.008;
-					break;
-				case 'O':
-					mol=16.00;
-					break;
-				case 'N':
-					mol=14.01;
-					break;
-				default:
-					ge=c-'1';
-					break;
-			}
-			///printf("%d\n",ge);
-			sum=sum+(ge*mol);
-			ge=1;
-		}
+#include<iostream>
+#include<string>
+#include<map>
+#include<cstring>
+#include<cctype>
+#include<sstream>
+using namespace std;
 
-		printf("%f\n",sum);
-	}	
+const int maxn = 80 + 5;
+
+char atom[maxn];				//原子名称 
+int num[maxn];					//对应的原子数量 
+map<char, double> atom_w;		//原子映射原子质量 
+int main() {
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+	//原子映射原子量
+	atom_w['C'] = 12.01;
+	atom_w['H'] = 1.008;
+	atom_w['O'] = 16.00;
+	atom_w['N'] = 14.01;
 	
-	
-	
-	
-	
-	
+	//读入原子名称和个数（分开存）
+	int n;
+	while(cin >> n) {
+		while(n--) {	
+			memset(atom, 0, sizeof(atom));				//初始化原子名称 
+			for(int i = 0; i < maxn; i++) num[i] = 1;	//初始化原子数量 
+			string tmp;
+			cin >> tmp;
+			//cout << tmp << endl;	
+		 
+			int pos = 0;							//用来表示存储的原子名称的位置 
+			for(int i = 0; i < tmp.size(); i++) {
+				if(isalpha(tmp[i])) {				//是字母 
+					atom[pos] = tmp[i];
+					pos++; 
+					tmp[i] = ' '; 					//让这个位置变为空格，方便数字的读取 
+				}else {
+					if(pos > 0) num[pos - 1] = 0;	//做标记，说明这个位置对应的原子名称有超过数目1的数量 
+				} 
+			}
+			//cout << tmp << endl;
+			
+			//cout << pos << endl;
+			//存大于数目1的原子个数，其他默认为1 
+			stringstream ss(tmp);
+			for(int i = 0; i < pos; i++) {
+				if(num[i] == 0) {
+					ss >> num[i];
+				}
+			}
+			//for(int i = 0; i < pos; i++) cout << num[i] << " ";
+			//cout << endl; 
+			
+			//计算分子量
+			double sum = 0.0; 
+			for(int i = 0; i < pos; i++) {
+				sum += (atom_w[atom[i]] * num[i]);
+				//cout << (atom_w[atom[i]] * num[i]) << " ";
+			}
+			//cout << endl;
+			printf("%.3f\n", sum); 	
+		}		
+	} 
 	
 	return 0;
-}
+} 
