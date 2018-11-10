@@ -1,60 +1,64 @@
-#include<stdio.h>
-#include<math.h>
-#include<string.h>
+#include<iostream>
+#include<set>
+#include<vector>
+using namespace std;
 
-int main(){
-	//盒子 
-	//输入三组数据和高
-	int a[100],h,len=0,wide=0;
-	int n,count=0,flag=1;
-	for(n=0;scanf("%d%d",&a[n],&a[n+1])==2;n+=2);
-	//for(int i=0;i<n;i++){
-		//printf("%d\n",a[i]);
-	//} 
-	scanf("%d",&h);
-	//printf("%d\n",h);
-	//三组数据其实只有3种数，长宽高。判定条件，一组数的值不相等，数中和高是否有相等，不相等则这组数表示长宽 
-	for(int i=0;i<n;i+=2){
-		if(a[i]!=a[i+1]){//这组数不相等 
-			if(len==0 || wide==0){//初始化len和wide的值 
-				if(a[i]==h){
-					len=a[i+1];
-					count+=2;
-					
-				} 
-				else if(a[i+1]==h){
-					len=a[i];
-					count+=2;
+set<int> l_w_h;						//运用set容器的去重的功能 
+vector<int> rect;			 		//存矩形数据 
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	int a, b;
+	while(cin >> a >> b) {
+		int same_n = 0;				//存元素相同的二元组个数 
+		rect.clear();
+		l_w_h.clear(); 
+		
+		//对第一组数据处理 
+		if(a == b) same_n++;
+		rect.push_back(a); rect.push_back(b);
+		l_w_h.insert(a); l_w_h.insert(b);
+		//对后5组数据进行相同的处理 
+		for(int i = 0; i < 5; i++) {
+			cin >> a >> b;
+			if(a == b) same_n++;
+			rect.push_back(a); rect.push_back(b);
+			l_w_h.insert(a); l_w_h.insert(b);
+		}
+		
+		
+		//输出 
+		if(l_w_h.size() == 1) {							//正方形，只存在一种元素 
+			//cout << "1" << endl;
+			cout << "POSSIBLE" << endl;
+		}else if(l_w_h.size() == 2 && same_n == 2) {	//存在两种元素且元素相同的二元组有且只有2个 
+			//cout << "2" << endl;
+			cout << "POSSIBLE" << endl;
+		}else if(l_w_h.size() == 3 && same_n == 0) {	//存在三种元素且没有元素相同的二元组 
+			//cout << "3" << endl;
+			set<int>::iterator it = l_w_h.begin();
+			int l = *it; it++;
+			int w = *it; it++;
+			int h = *it;
+			//cout << l << " " << w << " " << h << endl; 
 			
-				}
-				else{
-					len=a[i];
-					wide=a[i+1];
-					count+=2; 
-				}	
-			}else{//不用初始化 
-				if(a[i]==h || a[i]==len || a[i]==wide)
-					count++;
-				if(a[i+1]==h || a[i+1]==len || a[i+1]==wide)
-					count++; 
-	
-			}	
-	
-		}else if(flag){//只能有一次 
-			if(a[i]==h && a[i+1]==h )//高可以是正方形 
-				count+=2;
-			flag=0;
+			//得到l、w、h出现的次数 
+			int num_l, num_w, num_h;
+			num_l = num_w = num_h = 0;
+			for(int i = 0; i < rect.size(); i++) {
+				if(rect[i] == l) num_l++;
+				else if(rect[i] == w) num_w++;
+				else if(rect[i] == h) num_h++;
+			}
+			//cout << num_l << " " << num_w << " " << num_h << endl;
+			if(num_l == 4 && num_w == 4 && num_h == 4) cout << "POSSIBLE" << endl;
+			else cout << "IMPOSSIBLE" << endl;
+			
+		}else {
+			//cout << "4" << endl;
+			cout << "IMPOSSIBLE" << endl;
 		} 
-		else
-			break;//不能构成长方体 
 	}
-	//判断count，如果count不等于输入的个数：6，则不能构成长方体
-	if(count==6)
-		printf("Yes");
-	else
-		printf("No"); 
-	
-	
 	
 	return 0;
-}
+} 
