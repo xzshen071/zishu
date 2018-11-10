@@ -1,13 +1,19 @@
-#include<stdio.h>
-#include<math.h>
-#include<string.h>
+#include<cstdio>
+#include<cmath>
+#include<cstring>
+#include<string>
+#include<iostream>
+#include<sstream>
+using namespace std;
 
+const int maxn=35;
+double a[maxn][maxn];
 int main(){
-	//浮点数
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
 	//计算机中存浮点数则是M x 2^E，M是尾数，E是阶码，最大浮点数中的M是9，换成十进制是16位，所以浮点数最多只能保留16位小数 
 	//枚举打表(反推)，一般给你结果表示的范围，就可以用此方法 
-	const int maxn=35;
-	double a[maxn][maxn];
 	for(int m=0;m<=9;m++){
 		for(int e=1;e<=30;e++){
 			//b=1-2^(-1-i)；c=2^j-1；a*2^c=A*10^B，左边不会超，但右边可能会超出上限 
@@ -18,40 +24,40 @@ int main(){
 			
 		}
 	} 
-	//输入AeB，取出A，B，然后查表
-	char s[maxn];
-	double A;
-	int B;
-	while(1){
-		scanf("%s",s);//先用数组存 
-		for(int i=0;i<strlen(s);i++){
+
+	string s;
+	const double min_diff = 1e-5;								//设置误差(double类型不像int型，double型存在误差)
+	while(cin >> s && s[0] != '0'){
+		//输入AeB，取出A，B，然后查表
+		double A;
+		int B;
+		//scanf("%s",s);//先用数组存 
+		for(int i=0;i<s.size();i++){
 			if(s[i]=='e')
-				s[i]=' ';//方便读A和B，因为scanf函数读到' '或者'\n'时会停下来 
+				s[i]=' ';								//方便读A和B，因为scanf函数读到' '或者'\n'时会停下来 
 			
 		}
-		sscanf(s,"%lf %d",&A,&B);//读A和B，作用可和sprintf类比
-		if(A==0 && B==0)
-			break;
+		stringstream ss(s);
+		ss >> A >> B;
+		//cout << A << " " << B << endl;
+		//if(A==0 && B==0)
+			//break;
 		double tmp=log10(A)+B;
 		int m,e;
+		int flag = 0;
 		for(m=0;m<=9;m++){
-			for(e=0;e<=30;e++){
-				if(a[m][e]==tmp)
+			for(e=1;e<=30;e++){
+				if(fabs(a[m][e] - tmp) < min_diff){		//如果用==会导致答案有误，因为doule型存在误差
+					flag = 1;
 					break;
-				
+				} 	
 			}
-			if(a[m][e]==tmp)
+			if(flag)
 				break;
 		}
 		printf("%d %d\n",m,e);
 		
 	}
-	
-	
-	
-	
-	
-	
 	
 	return 0;
 }
