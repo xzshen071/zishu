@@ -26,7 +26,6 @@ int main() {
 			l_w_h.insert(a); l_w_h.insert(b);
 		}
 		
-		
 		//输出 
 		if(l_w_h.size() == 1) {							//正方形，只存在一种元素 
 			//cout << "1" << endl;
