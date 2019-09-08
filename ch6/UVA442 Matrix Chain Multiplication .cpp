@@ -46,5 +46,7 @@ int main() {
 		//打印，最好写成一个单独的模块，用一个标志来确定打印结果
 		if(error) cout << "error\n"; else cout << ans << endl; 
 	}
+	//fclose(stdin);
+	//fclose(stdout);
 	return 0;
 }
